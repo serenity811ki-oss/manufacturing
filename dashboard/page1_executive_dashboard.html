@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manufacturing Downtime Analytics — Executive Dashboard</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c222b; --border:#2a313d;
+    --text:#e7ebf0; --muted:#9aa5b1; --amber:#f2a93b; --teal:#2ec4b6;
+    --red:#e5484d; --blue:#4c8bf5; --purple:#9d6bd6; --green:#5fd382;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px;background:linear-gradient(90deg,#0d1117,#161b22 60%,#0d1117);
+    border-bottom:3px solid var(--amber);
+  }
+  .topbar h1{font-size:20px;margin:0;letter-spacing:0.5px;}
+  .topbar h1 span{color:var(--amber);}
+  .topbar .sub{color:var(--muted);font-size:12px;margin-top:4px;}
+  .tabs{display:flex;gap:6px;}
+  .tab{padding:7px 16px;font-size:12px;border-radius:4px 4px 0 0;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-bottom:none;}
+  .tab.active{color:var(--bg);background:var(--amber);font-weight:bold;}
+
+  .slicer-bar{
+    display:flex;flex-wrap:wrap;gap:10px;padding:12px 28px;background:var(--panel);
+    border-bottom:1px solid var(--border);
+  }
+  .slicer{
+    background:var(--panel2);border:1px solid var(--border);border-radius:4px;
+    padding:6px 12px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;
+  }
+  .slicer b{color:var(--text);font-weight:600;}
+  .slicer .chip{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:2px 8px;color:var(--amber);font-size:10px;}
+
+  .kpi-row{padding:16px 28px 4px;overflow:hidden;}
+  .kpi{
+    background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:12px 14px;
+    border-top:3px solid var(--amber);
+    float:left;width:11.3%;margin-right:1.05%;margin-bottom:12px;min-height:78px;
+  }
+  .kpi:nth-child(8n){margin-right:0;}
+  .kpi.teal{border-top-color:var(--teal);}
+  .kpi.red{border-top-color:var(--red);}
+  .kpi.blue{border-top-color:var(--blue);}
+  .kpi.purple{border-top-color:var(--purple);}
+  .kpi.green{border-top-color:var(--green);}
+  .kpi .label{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+  .kpi .value{font-size:22px;font-weight:700;margin-top:6px;}
+  .kpi .delta{font-size:10.5px;color:var(--green);margin-top:4px;}
+  .kpi .delta.down{color:var(--red);}
+
+  .grid{padding:8px 28px 28px;overflow:hidden;}
+  .card{
+    background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:10px 12px 4px;
+    float:left;margin:0 14px 14px 0;box-sizing:border-box;
+  }
+  .card h3{font-size:12.5px;margin:0 0 4px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px;}
+  .card img{width:100%;display:block;border-radius:4px;}
+  .row{overflow:hidden;}
+  .span-8{width:65.6%;}
+  .span-4{width:31%;margin-right:0;}
+  .span-6{width:48.2%;}
+  .span-12{width:100%;margin-right:0;}
+  .span-3{width:22.8%;}
+
+  .footer{padding:10px 28px 24px;color:var(--muted);font-size:11px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>MANUFACTURING <span>DOWNTIME</span> ANALYTICS</h1>
+    <div class="sub">Executive Overview · Jan 2023 – Dec 2024 · All plants</div>
+  </div>
+  <div class="tabs">
+    <a class="tab active" href="page1_executive_dashboard.html" style="text-decoration:none;">Executive Overview</a>
+    <a class="tab" href="page2_executive_insights.html" style="text-decoration:none;">Executive Insights</a>
+  </div>
+</div>
+
+<div class="slicer-bar">
+  <div class="slicer">Date Range <span class="chip">Jan 2023 – Dec 2024</span></div>
+  <div class="slicer">Plant <span class="chip">All (4)</span></div>
+  <div class="slicer">Production Line <span class="chip">All (12)</span></div>
+  <div class="slicer">Machine <span class="chip">All (47)</span></div>
+  <div class="slicer">Machine Type <span class="chip">All (10)</span></div>
+  <div class="slicer">Shift <span class="chip">All (3)</span></div>
+  <div class="slicer">Downtime Category <span class="chip">All (8)</span></div>
+  <div class="slicer">Planned / Unplanned <span class="chip">All</span></div>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">Total downtime events</div>
+    <div class="value">4,200</div>
+    <div class="delta">+4.1% YoY</div>
+  </div>
+  <div class="kpi teal">
+    <div class="label">Total downtime hours</div>
+    <div class="value">4,330.4</div>
+    <div class="delta down">+2.8% YoY</div>
+  </div>
+  <div class="kpi red">
+    <div class="label">Total repair cost</div>
+    <div class="value">€2.05M</div>
+    <div class="delta down">+3.6% YoY</div>
+  </div>
+  <div class="kpi purple">
+    <div class="label">Units lost</div>
+    <div class="value">387,929</div>
+    <div class="delta down">+1.9% YoY</div>
+  </div>
+  <div class="kpi blue">
+    <div class="label">Avg downtime / event</div>
+    <div class="value">1.03 hrs</div>
+    <div class="delta">-0.6% YoY</div>
+  </div>
+  <div class="kpi green">
+    <div class="label">Avg repair cost</div>
+    <div class="value">€488.4</div>
+    <div class="delta down">+1.2% YoY</div>
+  </div>
+  <div class="kpi red">
+    <div class="label">Pending events</div>
+    <div class="value">243</div>
+    <div class="delta down">Needs attention</div>
+  </div>
+  <div class="kpi amber-kpi kpi">
+    <div class="label">Unplanned downtime %</div>
+    <div class="value">72.5%</div>
+    <div class="delta down">Target ≤ 60%</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="row">
+    <div class="card span-8"><h3>Monthly downtime trend</h3><img src="../charts/01_monthly_downtime_trend.png"></div>
+    <div class="card span-4"><h3>Planned vs unplanned</h3><img src="../charts/09_planned_vs_unplanned.png"></div>
+  </div>
+  <div class="row">
+    <div class="card span-8"><h3>Monthly repair cost trend</h3><img src="../charts/02_monthly_cost_trend.png"></div>
+    <div class="card span-4"><h3>Downtime by shift</h3><img src="../charts/06_downtime_by_shift.png"></div>
+  </div>
+  <div class="row">
+    <div class="card span-3" style="width:32%"><h3>Downtime hours by plant</h3><img src="../charts/03_downtime_by_plant.png"></div>
+    <div class="card span-3" style="width:32%"><h3>Downtime hours by machine (top 10)</h3><img src="../charts/04_downtime_by_machine.png"></div>
+    <div class="card span-3" style="width:32%;margin-right:0"><h3>Downtime hours by production line</h3><img src="../charts/05_downtime_by_line.png"></div>
+  </div>
+  <div class="row">
+    <div class="card span-6"><h3>Downtime hours by reason (top 10)</h3><img src="../charts/07_downtime_by_reason.png"></div>
+    <div class="card span-6" style="margin-right:0"><h3>Downtime hours by machine type</h3><img src="../charts/08_downtime_by_machine_type.png"></div>
+  </div>
+  <div class="row">
+    <div class="card span-6"><h3>Repair cost by machine (top 15)</h3><img src="../charts/10_repair_cost_by_machine.png"></div>
+    <div class="card span-6" style="margin-right:0"><h3>Top 10 most expensive machines</h3><img src="../charts/11_top10_expensive_machines.png"></div>
+  </div>
+  <div class="row">
+    <div class="card span-6"><h3>Production units lost by plant</h3><img src="../charts/12_units_lost_by_plant.png"></div>
+    <div class="card span-6" style="margin-right:0"><h3>Pareto analysis — downtime reasons</h3><img src="../charts/13_pareto_downtime_reasons.png"></div>
+  </div>
+  <div class="row">
+    <div class="card span-12"><h3>Downtime heatmap — day of week vs shift</h3><img src="../charts/14_heatmap_day_shift.png"></div>
+  </div>
+  <div class="row">
+    <div class="card span-6"><h3>Repair cost waterfall by category</h3><img src="../charts/15_waterfall_repair_cost.png"></div>
+    <div class="card span-6" style="margin-right:0"><h3>Downtime hours vs repair cost (scatter)</h3><img src="../charts/16_scatter_downtime_vs_cost.png"></div>
+  </div>
+  <div class="row">
+    <div class="card span-12"><h3>Treemap — downtime hours by category</h3><img src="../charts/17_treemap_categories.png"></div>
+  </div>
+</div>
+
+<div class="footer">Manufacturing Downtime Analytics · Portfolio project · Data model: Fact_Downtime, Dim_Date, Dim_Machine · Built in Power BI</div>
+
+</body>
+</html>

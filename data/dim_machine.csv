@@ -1,0 +1,48 @@
+Machine ID,Plant,Production Line,Machine Type
+MC-0015,Plant Munich,Line M1,Stamping Press
+MC-0031,Plant Katowice,Line K1,Robotic Welder
+MC-0039,Plant Lyon,Line L2,Industrial Oven
+MC-0021,Plant Munich,Line M3,Injection Molding Machine
+MC-0011,Plant Munich,Line M1,Industrial Oven
+MC-0046,Plant Lyon,Line L3,Hydraulic Press
+MC-0045,Plant Lyon,Line L3,Packaging Machine
+MC-0007,Plant Rotterdam,Line R2,Robotic Welder
+MC-0008,Plant Rotterdam,Line R3,Packaging Machine
+MC-0022,Plant Munich,Line M3,Stamping Press
+MC-0017,Plant Munich,Line M2,Conveyor System
+MC-0043,Plant Lyon,Line L2,Injection Molding Machine
+MC-0027,Plant Munich,Line M4,Packaging Machine
+MC-0037,Plant Lyon,Line L1,Injection Molding Machine
+MC-0038,Plant Lyon,Line L1,Stamping Press
+MC-0026,Plant Munich,Line M4,CNC Machine
+MC-0025,Plant Munich,Line M4,Robotic Welder
+MC-0012,Plant Munich,Line M1,Industrial Oven
+MC-0004,Plant Rotterdam,Line R2,Stamping Press
+MC-0003,Plant Rotterdam,Line R1,Injection Molding Machine
+MC-0010,Plant Rotterdam,Line R3,Industrial Oven
+MC-0030,Plant Katowice,Line K1,Stamping Press
+MC-0029,Plant Katowice,Line K1,Stamping Press
+MC-0024,Plant Munich,Line M3,Injection Molding Machine
+MC-0036,Plant Lyon,Line L1,Palletizer
+MC-0002,Plant Rotterdam,Line R1,Assembly Robot
+MC-0044,Plant Lyon,Line L3,CNC Machine
+MC-0041,Plant Lyon,Line L2,Hydraulic Press
+MC-0009,Plant Rotterdam,Line R3,Palletizer
+MC-0020,Plant Munich,Line M3,Assembly Robot
+MC-0032,Plant Katowice,Line K2,Hydraulic Press
+MC-0001,Plant Rotterdam,Line R1,Industrial Oven
+MC-0047,Plant Lyon,Line L3,Industrial Oven
+MC-0033,Plant Katowice,Line K2,Industrial Oven
+MC-0034,Plant Katowice,Line K2,Industrial Oven
+MC-0013,Plant Munich,Line M1,Packaging Machine
+MC-0006,Plant Rotterdam,Line R2,Assembly Robot
+MC-0028,Plant Munich,Line M4,Stamping Press
+MC-0042,Plant Lyon,Line L2,Conveyor System
+MC-0018,Plant Munich,Line M2,Hydraulic Press
+MC-0040,Plant Lyon,Line L2,Industrial Oven
+MC-0005,Plant Rotterdam,Line R2,CNC Machine
+MC-0023,Plant Munich,Line M3,Packaging Machine
+MC-0019,Plant Munich,Line M2,Palletizer
+MC-0016,Plant Munich,Line M2,Packaging Machine
+MC-0014,Plant Munich,Line M1,Hydraulic Press
+MC-0035,Plant Katowice,Line K2,Conveyor System

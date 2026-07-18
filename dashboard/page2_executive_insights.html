@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Executive Insights</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c222b; --border:#2a313d;
+    --text:#e7ebf0; --muted:#9aa5b1; --amber:#f2a93b; --teal:#2ec4b6;
+    --red:#e5484d; --blue:#4c8bf5; --purple:#9d6bd6; --green:#5fd382;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px;background:linear-gradient(90deg,#0d1117,#161b22 60%,#0d1117);
+    border-bottom:3px solid var(--teal);
+  }
+  .topbar h1{font-size:20px;margin:0;letter-spacing:0.5px;}
+  .topbar h1 span{color:var(--teal);}
+  .topbar .sub{color:var(--muted);font-size:12px;margin-top:4px;}
+  .tabs{display:flex;gap:6px;}
+  .tab{padding:7px 16px;font-size:12px;border-radius:4px 4px 0 0;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-bottom:none;}
+  .tab.active{color:var(--bg);background:var(--teal);font-weight:bold;}
+
+  .wrap{padding:22px 28px;}
+  .headline{
+    background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--teal);
+    border-radius:6px;padding:16px 20px;margin-bottom:18px;
+  }
+  .headline p{margin:0;font-size:14px;line-height:1.6;color:var(--text);}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+  .stat{
+    background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:14px 16px;border-top:3px solid var(--amber);
+  }
+  .stat.red{border-top-color:var(--red);}
+  .stat.purple{border-top-color:var(--purple);}
+  .stat.blue{border-top-color:var(--blue);}
+  .stat .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+  .stat .v{font-size:17px;font-weight:700;margin-top:6px;}
+  .stat .d{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4;}
+
+  .two-col{display:grid;grid-template-columns:1.1fr 0.9fr;gap:18px;}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px 20px;}
+  .panel h3{margin:0 0 10px;font-size:14px;color:var(--teal);letter-spacing:.3px;}
+  .panel ol,.panel ul{margin:0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--text);}
+  .panel li{margin-bottom:8px;}
+  .panel li b{color:var(--amber);}
+  .tag{display:inline-block;background:var(--panel2);border:1px solid var(--border);color:var(--muted);
+       font-size:10px;padding:2px 7px;border-radius:10px;margin-right:6px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>EXECUTIVE <span>INSIGHTS</span></h1>
+    <div class="sub">Key findings, root causes & recommendations · Jan 2023 – Dec 2024</div>
+  </div>
+  <div class="tabs">
+    <a class="tab" href="page1_executive_dashboard.html" style="text-decoration:none;">Executive Overview</a>
+    <a class="tab active" href="page2_executive_insights.html" style="text-decoration:none;">Executive Insights</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="headline">
+    <p>Across 4,200 logged downtime events and 4,330 downtime hours over two years, unplanned failures
+    account for <b style="color:var(--red)">72.5%</b> of all events and drove <b style="color:var(--amber)">€2.05M</b>
+    in repair spend. <b>Plant Munich</b> is the largest single contributor to downtime hours, and
+    <b>material shortages</b> — not mechanical wear — are the single costliest downtime category. The pattern
+    points to a supply-chain and preventive-maintenance opportunity rather than a machine-reliability crisis alone.</p>
+  </div>
+
+  <div class="grid">
+    <div class="stat red">
+      <div class="k">Worst performing plant</div>
+      <div class="v">Plant Munich</div>
+      <div class="d">1,639.9 downtime hours — the highest of all 4 plants, ~38% of total downtime hours company-wide.</div>
+    </div>
+    <div class="stat">
+      <div class="k">Highest repair-cost machine</div>
+      <div class="v">MC-0003 · Injection Molding</div>
+      <div class="d">€76,403 cumulative repair cost — more than double the next machine on the list.</div>
+    </div>
+    <div class="stat purple">
+      <div class="k">Most common downtime reason</div>
+      <div class="v">Product Changeover</div>
+      <div class="d">211 logged events — a planned-downtime driver, signalling changeover time itself is a target for SMED-style improvement.</div>
+    </div>
+    <div class="stat blue">
+      <div class="k">Highest downtime months</div>
+      <div class="v">Jan 2023 · Dec 2023 · Feb 2023</div>
+      <div class="d">Winter months consistently show 15–25% more downtime hours than summer months.</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <h3>Root cause summary</h3>
+      <ul>
+        <li><b>Material shortage</b> is the single largest cost driver at <b>€484.7k</b> — ahead of mechanical failure
+        (€362.3k) and electrical failure (€253.4k) — suggesting supplier reliability and buffer-stock policy issues
+        outweigh equipment condition as a cost lever.</li>
+        <li>Unplanned downtime share is consistently high across all four plants (71.4%–73.8%), so the
+        imbalance is systemic rather than isolated to one site.</li>
+        <li>Seasonality is real: winter months (Dec–Feb) run 15–25% higher downtime hours, consistent with
+        cold-start mechanical stress and higher electrical fault rates.</li>
+        <li>243 events remain in <b>Pending</b> status — a backlog that risks compounding if not resourced.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Recommendations</h3>
+      <ol>
+        <li><b>Shift maintenance mix toward Predictive/Preventive</b> for the top 10 highest-cost machines
+        (led by MC-0003) — condition monitoring on injection molding and stamping press assets specifically.</li>
+        <li><b>Renegotiate supplier SLAs / buffer stock</b> for the components behind Material Shortage events,
+        since this is the #1 cost category despite not being a machine reliability issue.</li>
+        <li><b>Run a changeover time study (SMED)</b> on Product Changeover — the most frequent reason —
+        to cut planned downtime without new capital spend.</li>
+        <li><b>Prioritize Plant Munich</b> for a root-cause deep dive given it carries the largest share of
+        total downtime hours across the two-year window.</li>
+        <li><b>Clear the pending backlog</b> (243 events) with a weekly triage cadence to prevent
+        recurrence and protect resolution-time KPIs.</li>
+        <li><b>Build a winter readiness checklist</b> (Oct–Nov) targeting the mechanical/electrical failure
+        modes that spike Dec–Feb.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <span class="tag">Data-driven</span><span class="tag">Root-cause based</span><span class="tag">Cost-prioritized</span>
+  </div>
+
+</div>
+</body>
+</html>

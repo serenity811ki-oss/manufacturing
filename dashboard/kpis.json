@@ -1,0 +1,14 @@
+{
+  "total_events": 4200,
+  "total_downtime_hours": 4330.4,
+  "total_repair_cost": 2051255.96,
+  "total_units_lost": 387929,
+  "avg_downtime_hours": 1.03,
+  "avg_repair_cost": 488.39,
+  "pending_events": 243,
+  "resolved_events": 3722,
+  "unplanned_pct": 72.5,
+  "planned_pct": 27.5,
+  "cost_per_hour": 473.69,
+  "avg_resolution_time": 2.02
+}
