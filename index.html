@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manufacturing Downtime Analytics — Executive Dashboard | Power BI Portfolio Project</title>
+<meta name="description" content="Interactive executive dashboard analyzing 4,200 manufacturing downtime events across 4 plants and 47 machines — €2.05M in repair cost, root-cause insights, and data-driven recommendations. Power BI / DAX portfolio project.">
+<meta name="author" content="Manufacturing Downtime Analytics Project">
+<meta name="theme-color" content="#0d1117">
+<meta name="color-scheme" content="dark">
+<link rel="canonical" href="https://github.com/">
+
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Manufacturing Downtime Analytics — Executive Dashboard">
+<meta property="og:description" content="4,200 downtime events · 4 plants · 47 machines · €2.05M repair cost. A Power BI-style executive dashboard with root-cause analysis and recommendations.">
+<meta property="og:image" content="screenshots/executive_overview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Manufacturing Downtime Analytics — Executive Dashboard">
+<meta name="twitter:description" content="4,200 downtime events · 4 plants · 47 machines · €2.05M repair cost — a data-driven manufacturing BI portfolio project.">
+
+<!-- Favicon: inline factory/gauge glyph, no external request -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230d1117'/%3E%3Ccircle cx='16' cy='17' r='9' fill='none' stroke='%23f2a93b' stroke-width='2.5'/%3E%3Cpath d='M16 17 L21 11' stroke='%232ec4b6' stroke-width='2.5' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='17' r='1.6' fill='%23e7ebf0'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c222b; --border:#2a313d;
+    --text:#e7ebf0; --muted:#9aa5b1; --amber:#f2a93b; --teal:#2ec4b6;
+    --red:#e5484d; --blue:#4c8bf5; --purple:#9d6bd6; --green:#5fd382;
+    --focus:#5fc9ff;
+    --font-ui:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    --font-num:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --radius:8px;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.55);
+    --dur:.22s;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    line-height:1.45;
+  }
+  h1,h2,h3{font-family:var(--font-ui);}
+  img{max-width:100%;height:auto;}
+
+  /* ---------------- Accessibility helpers ---------------- */
+  .skip-link{
+    position:absolute;left:-9999px;top:0;background:var(--teal);color:#04211d;
+    padding:10px 16px;border-radius:0 0 6px 0;font-weight:700;z-index:1000;text-decoration:none;
+  }
+  .skip-link:focus{left:0;}
+  .visually-hidden{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+  :focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  }
+
+  /* ---------------- Shared chrome ---------------- */
+  header.topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    padding:18px 28px;background:linear-gradient(90deg,#0d1117,#161b22 60%,#0d1117);
+    border-bottom:3px solid var(--border);position:sticky;top:0;z-index:50;
+    backdrop-filter:saturate(140%) blur(6px);
+  }
+  .topbar h1{font-size:19px;margin:0;letter-spacing:.4px;font-weight:800;}
+  .topbar .sub{color:var(--muted);font-size:12px;margin-top:4px;}
+
+  .tabs{display:flex;gap:6px;} /* role=tablist */
+  .tab{
+    padding:8px 18px;font-size:12.5px;font-weight:600;border-radius:6px 6px 0 0;color:var(--muted);
+    background:var(--panel);border:1px solid var(--border);border-bottom:none;
+    cursor:pointer;font-family:inherit;transition:background var(--dur) ease,color var(--dur) ease,transform var(--dur) ease;
+  }
+  .tab:hover{background:var(--panel2);color:var(--text);}
+  .tab[aria-selected="true"]{color:var(--bg);background:var(--amber);font-weight:800;}
+  #view-insights .tab[aria-selected="true"]{background:var(--teal);}
+
+  .view{display:none;}
+  .view[data-active="true"]{display:block;animation:fadeUp .35s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  #view-overview header.topbar{border-bottom-color:var(--amber);}
+  #view-overview .topbar h1 span{color:var(--amber);}
+
+  #view-insights header.topbar{border-bottom-color:var(--teal);}
+  #view-insights .topbar h1 span{color:var(--teal);}
+
+  footer.site-footer{padding:14px 28px 28px;color:var(--muted);font-size:11.5px;border-top:1px solid var(--border);}
+  footer.site-footer a{color:var(--teal);}
+
+  /* ---------------- Executive Overview (page 1) ---------------- */
+  .slicer-bar{
+    display:flex;flex-wrap:wrap;gap:10px;padding:12px 28px;background:var(--panel);
+    border-bottom:1px solid var(--border);
+  }
+  .slicer{
+    background:var(--panel2);border:1px solid var(--border);border-radius:5px;
+    padding:6px 12px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;
+  }
+  .slicer b{color:var(--text);font-weight:600;}
+  .slicer .chip{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:2px 8px;color:var(--amber);font-size:10px;font-family:var(--font-num);}
+
+  .kpi-row{
+    padding:18px 28px 6px;display:grid;gap:12px;
+    grid-template-columns:repeat(8, minmax(0,1fr));
+  }
+  .kpi{
+    background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 14px 12px;
+    border-top:3px solid var(--amber);box-shadow:var(--shadow);
+    transition:transform var(--dur) ease,border-color var(--dur) ease;
+  }
+  .kpi:hover{transform:translateY(-2px);}
+  .kpi.teal{border-top-color:var(--teal);}
+  .kpi.red{border-top-color:var(--red);}
+  .kpi.blue{border-top-color:var(--blue);}
+  .kpi.purple{border-top-color:var(--purple);}
+  .kpi.green{border-top-color:var(--green);}
+  .kpi .label{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+  .kpi .value{font-family:var(--font-num);font-size:21px;font-weight:700;margin-top:7px;}
+  .kpi .delta{font-size:10.5px;color:var(--green);margin-top:5px;}
+  .kpi .delta.down{color:var(--red);}
+
+  .grid{padding:10px 28px 30px;display:flex;flex-direction:column;gap:14px;}
+  .row{display:grid;gap:14px;}
+  .row.cols-2{grid-template-columns:1fr 1fr;}
+  .row.cols-3{grid-template-columns:repeat(3,1fr);}
+  .row.cols-8-4{grid-template-columns:2fr 1fr;}
+  .row.cols-1{grid-template-columns:1fr;}
+
+  .card{
+    background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px 8px;
+    box-shadow:var(--shadow);transition:border-color var(--dur) ease;
+    min-width:0;
+  }
+  .card:hover{border-color:#3a4657;}
+  .card h3{font-size:12.5px;margin:0 0 8px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+  .card img{width:100%;display:block;border-radius:4px;background:#0009;}
+  .card figcaption{margin:0;}
+
+  /* ---------------- Executive Insights (page 2) ---------------- */
+  .wrap{padding:24px 28px;max-width:1400px;}
+  .headline{
+    background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--teal);
+    border-radius:var(--radius);padding:18px 22px;margin-bottom:20px;box-shadow:var(--shadow);
+  }
+  .headline p{margin:0;font-size:14.5px;line-height:1.65;color:var(--text);}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+  .stat{
+    background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;
+    border-top:3px solid var(--amber);box-shadow:var(--shadow);transition:transform var(--dur) ease;
+  }
+  .stat:hover{transform:translateY(-2px);}
+  .stat.red{border-top-color:var(--red);}
+  .stat.purple{border-top-color:var(--purple);}
+  .stat.blue{border-top-color:var(--blue);}
+  .stat .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+  .stat .v{font-size:17px;font-weight:700;margin-top:7px;}
+  .stat .d{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.45;}
+
+  .two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;box-shadow:var(--shadow);}
+  .panel h3{margin:0 0 12px;font-size:14px;color:var(--teal);letter-spacing:.3px;}
+  .panel ol,.panel ul{margin:0;padding-left:19px;font-size:13.2px;line-height:1.7;color:var(--text);}
+  .panel li{margin-bottom:9px;}
+  .panel li b{color:var(--amber);}
+  .tag{display:inline-block;background:var(--panel2);border:1px solid var(--border);color:var(--muted);
+       font-size:10px;padding:3px 8px;border-radius:10px;margin-right:6px;}
+
+  /* ---------------- Responsive breakpoints ---------------- */
+  @media (max-width: 1180px){
+    .kpi-row{grid-template-columns:repeat(4,minmax(0,1fr));}
+    .row.cols-3{grid-template-columns:1fr 1fr;}
+    .stat-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width: 860px){
+    .topbar{padding:14px 16px;}
+    .slicer-bar,.grid,.wrap{padding-left:16px;padding-right:16px;}
+    .kpi-row{grid-template-columns:repeat(2,minmax(0,1fr));padding-left:16px;padding-right:16px;}
+    .row.cols-2,.row.cols-8-4,.row.cols-3{grid-template-columns:1fr;}
+    .two-col{grid-template-columns:1fr;}
+    .stat-grid{grid-template-columns:1fr;}
+    .topbar h1{font-size:16px;}
+  }
+  @media (max-width: 480px){
+    .kpi-row{grid-template-columns:1fr 1fr;}
+    .tab{padding:7px 12px;font-size:11.5px;}
+  }
+
+  /* ---------------- Print ---------------- */
+  @media print{
+    header.topbar{position:static;background:#fff !important;color:#000;}
+    .tabs{display:none;}
+    .view{display:block !important;page-break-after:always;}
+    body{background:#fff;color:#000;}
+    .card,.kpi,.stat,.panel,.headline{box-shadow:none;border:1px solid #ccc;}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div id="view-overview" class="view" data-active="true" role="tabpanel" aria-labelledby="tab-overview">
+  <header class="topbar">
+    <div>
+      <h1>MANUFACTURING <span>DOWNTIME</span> ANALYTICS</h1>
+      <p class="sub">Executive Overview · Jan 2023 – Dec 2024 · All plants</p>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Dashboard pages">
+      <button type="button" id="tab-overview" class="tab" role="tab" aria-selected="true" aria-controls="view-overview" tabindex="0">Executive Overview</button>
+      <button type="button" id="tab-insights" class="tab" role="tab" aria-selected="false" aria-controls="view-insights" tabindex="-1">Executive Insights</button>
+    </nav>
+  </header>
+
+  <div class="slicer-bar" aria-label="Report filters (static preview)">
+    <div class="slicer">Date Range <span class="chip">Jan 2023 – Dec 2024</span></div>
+    <div class="slicer">Plant <span class="chip">All (4)</span></div>
+    <div class="slicer">Production Line <span class="chip">All (12)</span></div>
+    <div class="slicer">Machine <span class="chip">All (47)</span></div>
+    <div class="slicer">Machine Type <span class="chip">All (10)</span></div>
+    <div class="slicer">Shift <span class="chip">All (3)</span></div>
+    <div class="slicer">Downtime Category <span class="chip">All (8)</span></div>
+    <div class="slicer">Planned / Unplanned <span class="chip">All</span></div>
+  </div>
+
+  <main id="main-content">
+  <section class="kpi-row" aria-label="Key performance indicators">
+    <div class="kpi"><div class="label">Total downtime events</div><div class="value">4,200</div><div class="delta">+4.1% YoY</div></div>
+    <div class="kpi teal"><div class="label">Total downtime hours</div><div class="value">4,330.4</div><div class="delta down">+2.8% YoY</div></div>
+    <div class="kpi red"><div class="label">Total repair cost</div><div class="value">€2.05M</div><div class="delta down">+3.6% YoY</div></div>
+    <div class="kpi purple"><div class="label">Units lost</div><div class="value">387,929</div><div class="delta down">+1.9% YoY</div></div>
+    <div class="kpi blue"><div class="label">Avg downtime / event</div><div class="value">1.03 hrs</div><div class="delta">−0.6% YoY</div></div>
+    <div class="kpi green"><div class="label">Avg repair cost</div><div class="value">€488.4</div><div class="delta down">+1.2% YoY</div></div>
+    <div class="kpi red"><div class="label">Pending events</div><div class="value">243</div><div class="delta down">Needs attention</div></div>
+    <div class="kpi"><div class="label">Unplanned downtime %</div><div class="value">72.5%</div><div class="delta down">Target ≤ 60%</div></div>
+  </section>
+
+  <section class="grid" aria-label="Downtime analysis charts">
+    <div class="row cols-8-4">
+      <figure class="card"><h3>Monthly downtime trend</h3><img src="charts/01_monthly_downtime_trend.png" width="1425" height="600" alt="Line chart of monthly downtime hours from January 2023 to December 2024, showing recurring peaks in winter months" loading="lazy"></figure>
+      <figure class="card"><h3>Planned vs unplanned</h3><img src="charts/09_planned_vs_unplanned.png" width="750" height="750" alt="Donut chart showing 72.5 percent unplanned downtime versus 27.5 percent planned downtime" loading="lazy"></figure>
+    </div>
+    <div class="row cols-8-4">
+      <figure class="card"><h3>Monthly repair cost trend</h3><img src="charts/02_monthly_cost_trend.png" width="1425" height="600" alt="Line chart of monthly repair cost in euros from January 2023 to December 2024" loading="lazy"></figure>
+      <figure class="card"><h3>Downtime by shift</h3><img src="charts/06_downtime_by_shift.png" width="825" height="600" alt="Bar chart of downtime hours split across morning, afternoon, and night shifts" loading="lazy"></figure>
+    </div>
+    <div class="row cols-3">
+      <figure class="card"><h3>Downtime hours by plant</h3><img src="charts/03_downtime_by_plant.png" width="900" height="600" alt="Horizontal bar chart of downtime hours for Rotterdam, Munich, Katowice, and Lyon plants, with Munich highest" loading="lazy"></figure>
+      <figure class="card"><h3>Downtime hours by machine (top 10)</h3><img src="charts/04_downtime_by_machine.png" width="900" height="675" alt="Horizontal bar chart of the ten machines with the most downtime hours" loading="lazy"></figure>
+      <figure class="card"><h3>Downtime hours by production line</h3><img src="charts/05_downtime_by_line.png" width="900" height="750" alt="Horizontal bar chart of downtime hours across all twelve production lines" loading="lazy"></figure>
+    </div>
+    <div class="row cols-2">
+      <figure class="card"><h3>Downtime hours by reason (top 10)</h3><img src="charts/07_downtime_by_reason.png" width="1050" height="750" alt="Horizontal bar chart of the ten most common downtime reasons, led by raw material delay and component stockout" loading="lazy"></figure>
+      <figure class="card"><h3>Downtime hours by machine type</h3><img src="charts/08_downtime_by_machine_type.png" width="975" height="750" alt="Horizontal bar chart of downtime hours grouped by the ten machine types" loading="lazy"></figure>
+    </div>
+    <div class="row cols-2">
+      <figure class="card"><h3>Repair cost by machine (top 15)</h3><img src="charts/10_repair_cost_by_machine.png" width="1050" height="900" alt="Horizontal bar chart of repair cost in euros for the fifteen most costly machines" loading="lazy"></figure>
+      <figure class="card"><h3>Top 10 most expensive machines</h3><img src="charts/11_top10_expensive_machines.png" width="1050" height="750" alt="Horizontal bar chart ranking the ten most expensive machines by cumulative repair cost, led by MC-0003" loading="lazy"></figure>
+    </div>
+    <div class="row cols-2">
+      <figure class="card"><h3>Production units lost by plant</h3><img src="charts/12_units_lost_by_plant.png" width="900" height="600" alt="Bar chart of production units lost to downtime, broken down by plant" loading="lazy"></figure>
+      <figure class="card"><h3>Pareto analysis — downtime reasons</h3><img src="charts/13_pareto_downtime_reasons.png" width="1350" height="750" alt="Pareto chart of downtime reasons with cumulative percentage line crossing eighty percent" loading="lazy"></figure>
+    </div>
+    <div class="row cols-1">
+      <figure class="card"><h3>Downtime heatmap — day of week vs shift</h3><img src="charts/14_heatmap_day_shift.png" width="1350" height="525" alt="Heatmap of downtime hours by day of week and shift, showing morning shifts as the highest-intensity cells" loading="lazy"></figure>
+    </div>
+    <div class="row cols-2">
+      <figure class="card"><h3>Repair cost waterfall by category</h3><img src="charts/15_waterfall_repair_cost.png" width="1425" height="750" alt="Waterfall chart building up total repair cost across the eight downtime categories" loading="lazy"></figure>
+      <figure class="card"><h3>Downtime hours vs repair cost (scatter)</h3><img src="charts/16_scatter_downtime_vs_cost.png" width="1050" height="825" alt="Scatter plot correlating downtime hours with repair cost, colored by planned versus unplanned status" loading="lazy"></figure>
+    </div>
+    <div class="row cols-1">
+      <figure class="card"><h3>Treemap — downtime hours by category</h3><img src="charts/17_treemap_categories.png" width="1425" height="750" alt="Treemap showing downtime hours by category, with material shortage and mechanical failure as the largest blocks" loading="lazy"></figure>
+    </div>
+  </section>
+  </main>
+
+  <footer class="site-footer">Manufacturing Downtime Analytics · Portfolio project · Data model: Fact_Downtime, Dim_Date, Dim_Machine · Built for Power BI · <a href="https://github.com/">View source on GitHub</a></footer>
+</div>
+
+<div id="view-insights" class="view" data-active="false" role="tabpanel" aria-labelledby="tab-insights" hidden>
+  <header class="topbar">
+    <div>
+      <h1>EXECUTIVE <span>INSIGHTS</span></h1>
+      <p class="sub">Key findings, root causes &amp; recommendations · Jan 2023 – Dec 2024</p>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Dashboard pages">
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="view-overview" data-mirror-of="tab-overview" tabindex="-1">Executive Overview</button>
+      <button type="button" class="tab" role="tab" aria-selected="true" aria-controls="view-insights" data-mirror-of="tab-insights" tabindex="0">Executive Insights</button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <div class="headline">
+      <p>Across 4,200 logged downtime events and 4,330 downtime hours over two years, unplanned failures
+      account for <b style="color:var(--red)">72.5%</b> of all events and drove <b style="color:var(--amber)">€2.05M</b>
+      in repair spend. <b>Plant Munich</b> is the largest single contributor to downtime hours, and
+      <b>material shortages</b> — not mechanical wear — are the single costliest downtime category. The pattern
+      points to a supply-chain and preventive-maintenance opportunity rather than a machine-reliability crisis alone.</p>
+    </div>
+
+    <div class="stat-grid" aria-label="Headline findings">
+      <div class="stat red">
+        <div class="k">Worst performing plant</div>
+        <div class="v">Plant Munich</div>
+        <div class="d">1,639.9 downtime hours — the highest of all 4 plants, ~38% of total downtime hours company-wide.</div>
+      </div>
+      <div class="stat">
+        <div class="k">Highest repair-cost machine</div>
+        <div class="v">MC-0003 · Injection Molding</div>
+        <div class="d">€76,403 cumulative repair cost — more than double the next machine on the list.</div>
+      </div>
+      <div class="stat purple">
+        <div class="k">Most common downtime reason</div>
+        <div class="v">Product Changeover</div>
+        <div class="d">211 logged events — a planned-downtime driver, signalling changeover time itself is a target for SMED-style improvement.</div>
+      </div>
+      <div class="stat blue">
+        <div class="k">Highest downtime months</div>
+        <div class="v">Jan 2023 · Dec 2023 · Feb 2023</div>
+        <div class="d">Winter months consistently show 15–25% more downtime hours than summer months.</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <h3>Root cause summary</h3>
+        <ul>
+          <li><b>Material shortage</b> is the single largest cost driver at <b>€484.7k</b> — ahead of mechanical failure
+          (€362.3k) and electrical failure (€253.4k) — suggesting supplier reliability and buffer-stock policy issues
+          outweigh equipment condition as a cost lever.</li>
+          <li>Unplanned downtime share is consistently high across all four plants (71.4%–73.8%), so the
+          imbalance is systemic rather than isolated to one site.</li>
+          <li>Seasonality is real: winter months (Dec–Feb) run 15–25% higher downtime hours, consistent with
+          cold-start mechanical stress and higher electrical fault rates.</li>
+          <li>243 events remain in <b>Pending</b> status — a backlog that risks compounding if not resourced.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>Recommendations</h3>
+        <ol>
+          <li><b>Shift maintenance mix toward Predictive/Preventive</b> for the top 10 highest-cost machines
+          (led by MC-0003) — condition monitoring on injection molding and stamping press assets specifically.</li>
+          <li><b>Renegotiate supplier SLAs / buffer stock</b> for the components behind Material Shortage events,
+          since this is the #1 cost category despite not being a machine reliability issue.</li>
+          <li><b>Run a changeover time study (SMED)</b> on Product Changeover — the most frequent reason —
+          to cut planned downtime without new capital spend.</li>
+          <li><b>Prioritize Plant Munich</b> for a root-cause deep dive given it carries the largest share of
+          total downtime hours across the two-year window.</li>
+          <li><b>Clear the pending backlog</b> (243 events) with a weekly triage cadence to prevent
+          recurrence and protect resolution-time KPIs.</li>
+          <li><b>Build a winter readiness checklist</b> (Oct–Nov) targeting the mechanical/electrical failure
+          modes that spike Dec–Feb.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <span class="tag">Data-driven</span><span class="tag">Root-cause based</span><span class="tag">Cost-prioritized</span>
+    </div>
+  </main>
+
+  <footer class="site-footer">Manufacturing Downtime Analytics · Portfolio project · Data model: Fact_Downtime, Dim_Date, Dim_Machine · Built for Power BI · <a href="https://github.com/">View source on GitHub</a></footer>
+</div>
+
+<script>
+(function(){
+  var views = { overview: document.getElementById('view-overview'), insights: document.getElementById('view-insights') };
+  var allTabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+
+  function activate(name, moveFocus){
+    var isOverview = name === 'overview';
+    Object.keys(views).forEach(function(key){
+      var el = views[key];
+      var active = key === name;
+      el.dataset.active = active;
+      el.toggleAttribute('hidden', !active);
+    });
+    allTabs.forEach(function(btn){
+      var controls = btn.getAttribute('aria-controls');
+      var selected = controls === 'view-' + name;
+      btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+      btn.tabIndex = selected ? 0 : -1;
+      if (selected && moveFocus) { btn.focus(); }
+    });
+    document.title = isOverview
+      ? 'Manufacturing Downtime Analytics — Executive Dashboard | Power BI Portfolio Project'
+      : 'Executive Insights — Manufacturing Downtime Analytics | Power BI Portfolio Project';
+    if (history.replaceState) { history.replaceState(null, '', '#' + name); }
+  }
+
+  allTabs.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      activate(btn.getAttribute('aria-controls') === 'view-insights' ? 'insights' : 'overview', false);
+    });
+    btn.addEventListener('keydown', function(e){
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      var goingInsights = e.key === 'ArrowRight';
+      activate(goingInsights ? 'insights' : 'overview', true);
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (location.hash === '#insights') { activate('insights', false); }
+  });
+})();
+</script>
+
+</body>
+</html>
